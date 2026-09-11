@@ -1,1767 +1,2659 @@
-Part 4 — Solution Architecture Specification
-Yes. We will continue with exactly the same discipline as Part 3, but now the role changes from System Analyst to Solution Architect.
+# Part 4 — Solution Architecture Specification
 
-The most important principle of Part 4 is:
+ Absolutely. We will continue the same **role-based, activity-driven, artifact-driven, stage-gated** approach.
 
-Do not start by asking "Which LangChain component should I use?" Start by asking "What architecture is required to satisfy the approved SRS?"
+ The major objective of Part 4 is to transform the approved **SRS** into a **complete Solution Architecture Package** that an AI Architect, Technical Lead, Security Architect, Data Engineer, and Developer can use without having to rediscover the system design.
 
-Only after the architecture is established should we map it to LangChain/LangGraph.
+ The key principle is:
 
-1. Role I Am Performing in Part 4
-For this stage, I am acting primarily as:
+ > **Part 3 defines WHAT the system must do. Part 4 defines HOW the overall solution will do it.**
 
-Solution Architect / Application Architect
+ However, we should **not yet jump into detailed prompt engineering or agent implementation**. Those belong to the AI Specification and Agent/Workflow Specification stages.
 
-with supporting perspectives of:
+---
 
-AI Architect
-Security Architect
-Data Architect
-Integration Architect
-Platform/Cloud Architect
-I am responsible for converting:
+ # 1\. Role I Am Performing in Part 4
 
-Approved Business Requirements
-             +
-Approved SRS
-             ↓
-     Technical Solution Design
-The fundamental question is:
+ For this stage, I am acting primarily as:
 
-How should the system be structured so that all approved requirements can be satisfied?
+ > **Solution Architect**
 
-2. What I Am NOT Doing Yet
-Part 4 should not prematurely become implementation.
+ with supporting perspectives of:
 
-I am not yet primarily deciding:
+ - Application Architect
+- Integration Architect
+- Data Architect
+- Security Architect
+- AI Solution Architect
+- Infrastructure/Cloud Architect
 
-❌ Exact Python classes
-❌ Exact LangChain code
-❌ Exact prompt wording
-❌ Exact Agent implementation
-❌ Exact LangGraph node code
-❌ Unit-test implementation
-Those belong later.
+ I am responsible for determining the **overall technical shape of the solution**.
 
-However, I am deciding architecture-level questions such as:
+ My questions are now different from Part 3.
 
-✓ Is an LLM required?
-✓ Where is AI used?
-✓ Is RAG required?
-✓ Is a workflow sufficient?
-✓ Is an agent required?
-✓ Is tool calling required?
-✓ Is conversation state required?
-✓ What external systems are involved?
-✓ What components are required?
-✓ What data flows between components?
-✓ Where are security boundaries?
-✓ Where are failure boundaries?
-✓ Where should validation happen?
-✓ Where should deterministic logic remain?
-✓ What technology categories are required?
-3. Part 4 Input
-The Solution Architect receives:
+ ### Part 3 — System Analyst
 
-LADF-002  BRD
-LADF-010  SRS
-LADF-005  Use Cases
-LADF-008  Functional Requirements
-LADF-011  NFRs
-LADF-013  Constraints
-LADF-015  Dependencies
-LADF-018  Risks
-LADF-021  Traceability Matrix
-LADF-025  AI Candidate Requirement Register
-The complete architect should not begin architecture design until these inputs are sufficiently stable.
+ > What must the system do?
 
-4. Part 4 Overall Process
-The complete architecture process is:
+ ### Part 4 — Solution Architect
 
-                    APPROVED SRS
-                         │
-                         ▼
-              1. Architecture Intake
-                         │
-                         ▼
-              2. Architecture Drivers
-                         │
-                         ▼
-              3. Architecture Principles
-                         │
-                         ▼
-              4. System Boundary
-                         │
-                         ▼
-              5. Context Architecture
-                         │
-                         ▼
-              6. Logical Architecture
-                         │
-                         ▼
-              7. Component Architecture
-                         │
-                         ▼
-              8. Application Architecture
-                         │
-                         ▼
-              9. Data Architecture
-                         │
-                         ▼
-             10. Integration Architecture
-                         │
-                         ▼
-             11. AI Architecture Decision
-                         │
-                         ▼
-             12. LLM Interaction Architecture
-                         │
-                         ▼
-             13. RAG Architecture
-                         │
-                         ▼
-             14. Tool Architecture
-                         │
-                         ▼
-             15. Agent/Workflow Decision
-                         │
-                         ▼
-             16. State/Memory Architecture
-                         │
-                         ▼
-             17. Security Architecture
-                         │
-                         ▼
-             18. Reliability Architecture
-                         │
-                         ▼
-             19. Performance Architecture
-                         │
-                         ▼
-             20. Observability Architecture
-                         │
-                         ▼
-             21. Infrastructure Architecture
-                         │
-                         ▼
-             22. Technology Selection
-                         │
-                         ▼
-             23. Architecture Decisions
-                         │
-                         ▼
-             24. Architecture Review
-                         │
-                         ▼
-                       GATE 3
-                         │
-                         ▼
-                   AI ARCHITECT
-5. Architecture Activities
-Let's now define every activity in detail.
+ > How should the system be structured to satisfy those requirements?
 
-Activity 1 — Architecture Intake
-Role
-Solution Architect
+ ### Part 5 — AI Architect
 
-Objective
-Understand exactly what must be architected.
+ > What should AI/LLM specifically do within that architecture?
 
-I review:
+ ### Part 6 — Prompt/AI Engineer
 
-BRD
-SRS
-Use Cases
-Functional Requirements
+ > How should the AI capability be instructed and configured?
+
+ ### Part 7 — Agent/Workflow Architect
+
+ > How should multi-step AI behavior, tools, state and orchestration work?
+
+ This separation prevents premature technology decisions.
+
+---
+
+ # 2\. Part 4 Input
+
+ The Solution Architect should not start from the raw business requirement.
+
+ The primary input is:
+
+```
+APPROVED BUSINESS PACKAGE
+        +
+APPROVED SRS
+        +
+REQUIREMENT TRACEABILITY
+        +
+CONSTRAINTS
+        +
+SECURITY REQUIREMENTS
+        +
 NFRs
-Security requirements
-Data requirements
-Integration requirements
-AI candidate requirements
-Constraints
-Dependencies
-Risks
-Activity
-Create an:
+        +
+AI CANDIDATE REGISTER
+```
 
-Architecture Intake Record
-# LADF-030 — Architecture Intake
+ Specifically:
 
-## Project
+```
+LADF-002 BRD
+LADF-010 SRS
+LADF-011 Functional Requirements
+LADF-012 Input/Output Contracts
+LADF-013 Integration Requirements
+LADF-014 Security Requirements
+LADF-015 NFRs
+LADF-016 Data Requirements
+LADF-025 AI Candidate Requirement Register
+```
 
-[Project Name]
+---
 
-## Architecture Owner
+ # 3\. Part 4 Overall Process
 
-[Architect]
+ The complete architecture process is:
 
-## Business Objective
+```
+                         APPROVED SRS
+                              │
+                              ▼
+                  1. Architecture Intake
+                              │
+                              ▼
+                  2. Requirement Analysis
+                              │
+                              ▼
+                  3. Architecture Drivers
+                              │
+                              ▼
+                  4. System Boundary
+                              │
+                              ▼
+                  5. Context Architecture
+                              │
+                              ▼
+                  6. Architectural Style
+                              │
+                              ▼
+                  7. Component Architecture
+                              │
+                              ▼
+                  8. Application Architecture
+                              │
+                              ▼
+                  9. Data Architecture
+                              │
+                              ▼
+                 10. Integration Architecture
+                              │
+                              ▼
+                 11. AI Architecture Decision
+                              │
+                              ▼
+                 12. Security Architecture
+                              │
+                              ▼
+                 13. API Architecture
+                              │
+                              ▼
+                 14. State Architecture
+                              │
+                              ▼
+                 15. Error/Recovery Architecture
+                              │
+                              ▼
+                 16. Performance Architecture
+                              │
+                              ▼
+                 17. Scalability Architecture
+                              │
+                              ▼
+                 18. Observability Architecture
+                              │
+                              ▼
+                 19. Infrastructure Architecture
+                              │
+                              ▼
+                 20. Technology Selection
+                              │
+                              ▼
+                 21. Architecture Decisions
+                              │
+                              ▼
+                 22. Threat/Risk Analysis
+                              │
+                              ▼
+                 23. Architecture Validation
+                              │
+                              ▼
+                 24. Developer-Level Architecture
+                              │
+                              ▼
+                       ARCHITECTURE REVIEW
+                              │
+                              ▼
+                           GATE 3
+                              │
+                              ▼
+                       AI ARCHITECT
+```
 
-[Objective]
+---
 
-## System Objective
+ # 4\. Architecture Activities and Roles
 
-[Objective]
+ | Activity | Primary Role | Supporting Role | Output |
+| --- | --- | --- | --- |
+| Architecture intake | Solution Architect | System Analyst | Architecture Input |
+| Requirement analysis | Solution Architect | System Analyst | Architecture Drivers |
+| System boundary | Solution Architect | System Analyst | Context |
+| Architectural style | Solution Architect | Tech Lead | Architecture Style |
+| Component design | Solution Architect | Application Architect | Component Architecture |
+| Data design | Data Architect | Solution Architect | Data Architecture |
+| Integration design | Integration Architect | Solution Architect | Integration Architecture |
+| AI architecture | AI Architect | Solution Architect | AI Decision |
+| Security | Security Architect | Solution Architect | Security Architecture |
+| API | Application Architect | Integration Architect | API Architecture |
+| State | Application/AI Architect | Solution Architect | State Architecture |
+| Resilience | Solution Architect | Platform Architect | Resilience Architecture |
+| Infrastructure | Cloud Architect | Solution Architect | Infrastructure Architecture |
+| Technology selection | Solution Architect | Tech Lead | Technology Matrix |
+| Architecture decisions | Solution Architect | All specialists | ADRs |
+| Threat analysis | Security Architect | Solution Architect | Threat Model |
+| Cost analysis | Solution/Cloud Architect | Finance/Product | Cost Model |
+| Validation | Architecture Review Board | All | Review |
+| Approval | Architecture Owner | Stakeholders | Baseline |
 
-## Primary Users
+---
 
-- [User]
+ # 5\. Activity 1 — Architecture Intake
 
-## Primary Capabilities
+ ## Role
 
-- [Capability]
+ **Solution Architect**
+
+ The first activity is to understand what we received from Part 3.
+
+ I create an architecture intake checklist.
+
+```
+# LADF-020 — Architecture Intake
+
+## Requirement Package
+
+- [ ] BRD approved
+- [ ] SRS approved
+- [ ] Functional requirements complete
+- [ ] NFRs defined
+- [ ] Security requirements defined
+- [ ] Integration requirements defined
+- [ ] Data requirements defined
+- [ ] Input/output contracts defined
+- [ ] AI candidate requirements identified
+- [ ] Constraints documented
+- [ ] Dependencies documented
+- [ ] Open questions reviewed
+
+## Architecture Readiness
+
+- [ ] Business objective understood
+- [ ] System boundary understood
+- [ ] Users identified
+- [ ] External systems identified
+- [ ] Critical NFRs identified
+- [ ] Security classification understood
+- [ ] Data sensitivity understood
+- [ ] AI requirements identified
+```
+
+ If critical information is missing:
+
+```
+STOP ARCHITECTURE
+       ↓
+Return to BA/System Analyst
+       ↓
+Clarification
+       ↓
+SRS Update
+       ↓
+Architecture resumes
+```
+
+---
+
+ # 6\. Activity 2 — Identify Architecture Drivers
+
+ Not every requirement has equal architectural importance.
+
+ The Architect identifies **Architecture Drivers**.
+
+ Examples:
+
+```
+High Availability
+Low Latency
+Security
+Privacy
+Large Context
+High AI Accuracy
+High Concurrency
+Low Cost
+Multi-Tenancy
+Regulatory Compliance
+Real-Time Processing
+Long-Running Workflow
+Human Approval
+External Tool Integration
+Auditability
+```
+
+---
+
+ # 7\. Architecture Driver Template
+
+```
+# LADF-021 — Architecture Drivers
+
+## AD-001
+
+### Driver
+
+[Name]
+
+### Description
+
+[What architectural concern exists?]
+
+### Source
+
+[NFR / Security Requirement / Business Requirement]
+
+### Priority
+
+Critical / High / Medium / Low
+
+### Impact
+
+[How does it influence architecture?]
+
+### Measurement
+
+[How will it be evaluated?]
+
+### Target
+
+[Target]
+```
+
+ Example:
+
+```
+AD-001
+
+Driver:
+Data Security
+
+Source:
+SEC-001
+
+Priority:
+Critical
+
+Impact:
+
+Sensitive employee information must not be exposed
+to unauthorized users or inappropriate processing paths.
+```
+
+---
+
+ # 8\. Activity 3 — Define Architecture Principles
+
+ Before choosing components, establish principles.
+
+ Example:
+
+```
+AP-001
+Security before AI convenience.
+
+AP-002
+Authorization must be deterministic.
+
+AP-003
+LLMs must not be treated as authoritative sources.
+
+AP-004
+Business-critical decisions should remain deterministic
+unless explicitly approved otherwise.
+
+AP-005
+AI behavior must be observable and evaluable.
+
+AP-006
+External dependencies must have defined failure behavior.
+
+AP-007
+Use the simplest architecture that satisfies requirements.
+```
+
+ This last principle is particularly important.
+
+ > **Do not use an Agent because the application happens to use an LLM.**
+
+---
+
+ # 9\. Activity 4 — Define System Boundary
+
+ Now we turn the SRS system boundary into an architectural boundary.
+
+ Example:
+
+```
+                    ┌─────────────────────────┐
+                    │       USER DOMAIN       │
+                    │                         │
+                    │       Employee          │
+                    └───────────┬─────────────┘
+                                │
+                                ▼
+                    ┌─────────────────────────┐
+                    │   APPLICATION DOMAIN    │
+                    │                         │
+                    │ Policy Assistant        │
+                    └───────────┬─────────────┘
+                                │
+              ┌─────────────────┼─────────────────┐
+              │                 │                 │
+              ▼                 ▼                 ▼
+       Identity System    Policy Source      AI Service
+```
+
+ Now the Architect starts deciding architectural ownership.
+
+---
+
+ # 10\. System Context Diagram
+
+ The architecture package should contain a formal context diagram.
+
+ It should identify:
+
+```
+Users
+Application
+External Systems
+External Data Sources
+External APIs
+Identity Provider
+AI/LLM Provider
+Monitoring
+Administration
+```
+
+ Template:
+
+```
+# LADF-022 — System Context
+
+## System
+
+[System Name]
+
+## Internal Responsibilities
+
+- [Responsibility]
+- [Responsibility]
+
+## External Actors
+
+- [Actor]
 
 ## External Systems
 
 - [System]
 
-## AI Candidate Capabilities
-
-- [Capability]
-
-## Critical NFRs
-
-- [Performance]
-- [Security]
-- [Availability]
-- [Scalability]
-
-## Major Constraints
-
-- [Constraint]
-
-## Major Risks
-
-- [Risk]
-
-## Architecture Questions
-
-1. [Question]
-2. [Question]
-Activity 2 — Identify Architecture Drivers
-Not every requirement has equal architectural importance.
-
-Some requirements strongly influence architecture.
-
-These are:
-
-Architecture Drivers
-For example:
-
-High volume
-      ↓
-Scalability architecture
-
-Sensitive information
-      ↓
-Security architecture
-
-Authoritative documents
-      ↓
-Knowledge/RAG architecture
-
-Multi-step operations
-      ↓
-Workflow/Agent architecture
-
-Long-running tasks
-      ↓
-State/persistence architecture
-
-Strict latency
-      ↓
-Performance architecture
-
-High AI cost
-      ↓
-Model/caching architecture
-Architecture Driver Template
-# LADF-031 — Architecture Drivers
-
-| ID | Driver | Source | Priority | Architectural Impact |
-|---|---|---|---|---|
-| ADRIVER-001 | | SRS | Critical | |
-| ADRIVER-002 | | NFR | High | |
-Important distinction:
-
-Architecture Driver ≠ Architecture Decision
-
-The driver says:
-
-"We need low latency."
-
-The decision might later be:
-
-"Use streaming responses and asynchronous retrieval."
-
-Activity 3 — Architecture Principles
-Before choosing components, establish principles.
-
-Example:
-
-AP-001
-Security decisions must not depend on LLM behavior.
-
-AP-002
-Deterministic business rules should remain deterministic.
-
-AP-003
-AI should be used only where it provides business value.
-
-AP-004
-External systems remain authoritative for their data.
-
-AP-005
-LLM outputs must be validated before being used by
-deterministic application components.
-
-AP-006
-Agent autonomy should be minimized to the level required
-by the use case.
-
-AP-007
-Every production AI interaction should be observable.
-Architecture Principle Template
-# LADF-032 — Architecture Principles
-
-## AP-XXX
-
-### Principle
-
-[Statement]
-
-### Rationale
-
-[Why?]
-
-### Applies To
-
-[Architecture area]
-
-### Priority
-
-Mandatory / Preferred
-
-### Consequence
-
-[Impact of following the principle]
-Activity 4 — Define System Boundary
-Now the architect creates the formal system context.
-
-Example:
-
-                    ┌──────────────┐
-                    │   Employee   │
-                    └──────┬───────┘
-                           │
-                           ▼
-                ┌────────────────────┐
-                │ Policy Assistant   │
-                │                    │
-                │ Application        │
-                └─────────┬──────────┘
-                          │
-             ┌────────────┼────────────┐
-             ▼            ▼            ▼
-       Identity       Policy       HR System
-        System       Repository
-We identify:
-
-System boundary
-External actors
-External systems
-Data sources
-Trust boundaries
-Ownership boundaries
-Activity 5 — System Context Architecture
-Create:
-
-LADF-033 — System Context Specification
-# System Context
-
-## System
-
-[System]
-
-## Primary Actors
-
-- ACT-001
-
-## External Systems
-
-- EXT-001
-
 ## External Data Sources
 
-- DATA-SRC-001
+- [Source]
 
 ## External Services
 
-- EXT-SVC-001
+- [Service]
 
 ## Trust Boundaries
 
-- TB-001
+- [Boundary]
+```
 
-## Data Exchanges
+---
 
-| Source | Destination | Data | Purpose |
-|---|---|---|---|
-| | | | |
-Activity 6 — Logical Architecture
-Now decompose the application logically.
+ # 11\. Activity 5 — Choose Architectural Style
 
-For an LLM application:
+ Now determine the overall application architecture.
 
-┌──────────────────────────────────────┐
-│              Client                  │
-└──────────────────┬───────────────────┘
-                   │
-                   ▼
-┌──────────────────────────────────────┐
-│          Application/API Layer       │
-└──────────────────┬───────────────────┘
-                   │
-                   ▼
-┌──────────────────────────────────────┐
-│      Request Orchestration Layer     │
-└───────────────┬───────────┬──────────┘
-                │           │
-                ▼           ▼
-           AI Capability   Business
-                │          Services
-                ▼
-        ┌───────────────┐
-        │ Knowledge     │
-        │ / Tools       │
-        └───────┬───────┘
-                │
-                ▼
-        External Systems
-The exact architecture depends on requirements.
+ Possible choices:
 
-Activity 7 — Component Architecture
-Now we determine actual logical components.
+```
+Monolith
+Modular Monolith
+Microservices
+Event Driven
+Serverless
+Service Oriented
+Pipeline Architecture
+Workflow Architecture
+Hybrid
+```
 
-Potential components:
+ For many LLM applications, a good starting architecture may be:
 
-Frontend
-API Gateway
-Authentication
-Authorization
-Conversation Service
-Request Validator
-Business Service
-AI Orchestrator
-Prompt Management
-Model Gateway
-Retriever
-Knowledge Service
-Tool Service
-State Store
-Conversation Store
-Cache
-Audit Service
-Observability
-But we don't automatically include all of them.
-
-Each component needs justification.
-
-Component Decision Table
-Component	Required?	Reason	Source
-Authentication	Yes	User identity required	SEC-001
-Authorization	Yes	Data protection	SEC-002
-Retriever	TBD	Depends on knowledge architecture	AI-001
-Agent	TBD	Depends on workflow complexity	AI-002
-State Store	TBD	Follow-up conversations	STATE-001
-Cache	TBD	Performance requirement	PERF-001
-This avoids architecture bloat.
-
-Activity 8 — Application Architecture
-Now define the application layers.
-
-A good baseline may be:
-
-Presentation
-     ↓
-API / Interface
-     ↓
-Application
-     ↓
-Domain / Business
-     ↓
+```
+API
+ ↓
+Application Service
+ ↓
 AI Orchestration
-     ↓
-Infrastructure
-     ↓
-External Systems
-For AI applications, I recommend explicitly separating:
+ ↓
+LLM / Tools / Retrieval
+```
 
-Business Logic
-from:
+ rather than immediately creating multiple microservices.
 
-AI Logic
-For example:
+ The decision should be based on requirements.
 
-Business Layer
-     │
-     ├── authorization
-     ├── business rules
-     ├── transaction rules
-     └── deterministic validation
-     
-AI Layer
-     │
-     ├── prompt
-     ├── model
-     ├── retrieval
-     ├── tool selection
-     └── AI response processing
-This is an important architectural boundary.
+---
 
-Activity 9 — Data Architecture
-Role
-Solution Architect + Data Architect
+ # 12\. Architectural Style Decision
 
-Determine:
+```
+# LADF-023 — Architectural Style Decision
 
-What data exists?
-Who owns it?
-Where is it stored?
-Who can access it?
-What is authoritative?
-What is transient?
-What is persistent?
-What is sensitive?
-What must be audited?
-For an LLM application:
+## Decision
 
+[Selected architecture style]
+
+## Alternatives Considered
+
+1. [Option]
+2. [Option]
+3. [Option]
+
+## Selected
+
+[Option]
+
+## Reason
+
+[Reason]
+
+## Drivers
+
+- AD-001
+- AD-002
+
+## Trade-offs
+
+### Benefits
+
+-
+
+### Disadvantages
+
+-
+
+### Risks
+
+-
+```
+
+---
+
+ # 13\. Activity 6 — Logical Component Architecture
+
+ Now decompose the system into logical components.
+
+ For a typical LLM application:
+
+```
+                    ┌───────────────┐
+                    │     User      │
+                    └───────┬───────┘
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │ API / UI      │
+                    └───────┬───────┘
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │ Application   │
+                    │ Service       │
+                    └───────┬───────┘
+                            │
+                 ┌──────────┼──────────┐
+                 ▼          ▼          ▼
+            Validation    AI Layer   Business
+                           │          Logic
+                           │
+                 ┌─────────┼──────────┐
+                 ▼         ▼          ▼
+                LLM      Retrieval   Tools
+                 │
+                 ▼
+             Response
+```
+
+ The exact architecture depends on the use case.
+
+---
+
+ # 14\. Component Specification
+
+ Every component should have a defined responsibility.
+
+```
+# LADF-024 — Component Specification
+
+## Component ID
+
+CMP-XXX
+
+## Component Name
+
+[Name]
+
+## Responsibility
+
+[What does it do?]
+
+## Inputs
+
+-
+
+## Outputs
+
+-
+
+## Dependencies
+
+-
+
+## Consumers
+
+-
+
+## Security Boundary
+
+[Description]
+
+## Failure Behavior
+
+[Description]
+
+## Scalability Requirement
+
+[Description]
+
+## Observability
+
+[Required metrics/logs/traces]
+
+## Related Requirements
+
+- SYS-FR-XXX
+```
+
+---
+
+ # 15\. Important Component Separation
+
+ For LLM applications, I strongly recommend considering these boundaries:
+
+```
+API Layer
+    ↓
+Authentication
+    ↓
+Authorization
+    ↓
+Input Validation
+    ↓
+Application Service
+    ↓
+AI Orchestration
+    ↓
+Context / Retrieval
+    ↓
+Model
+    ↓
+Output Validation
+    ↓
+Business Validation
+    ↓
+Response
+```
+
+ This is better than:
+
+```
+User
+ ↓
+LLM
+ ↓
+Everything
+```
+
+ The LLM should not become the entire application architecture.
+
+---
+
+ # 16\. Activity 7 — Application Architecture
+
+ Now define application-level layers.
+
+ A recommended logical separation is:
+
+```
+Presentation Layer
+        ↓
+API Layer
+        ↓
+Application Layer
+        ↓
+Domain / Business Layer
+        ↓
+AI Orchestration Layer
+        ↓
+Infrastructure Layer
+```
+
+ Possible implementation later:
+
+```
+presentation/
+api/
+application/
+domain/
+ai/
+infrastructure/
+```
+
+ But the architecture document should define the responsibility first.
+
+---
+
+ # 17\. Activity 8 — Data Architecture
+
+ ## Role
+
+ **Data Architect / Solution Architect**
+
+ Determine:
+
+ - What data exists?
+- Who owns it?
+- Where does it originate?
+- Where does it reside?
+- How is it accessed?
+- How long is it retained?
+- What is sensitive?
+- What is transient?
+- What is persistent?
+
+ For an LLM system, distinguish:
+
+```
 Business Data
-     │
-     ├── Transactional Data
-     ├── User Data
-     └── Reference Data
+        ↓
+Application Data
+        ↓
+Conversation Data
+        ↓
+AI Context
+        ↓
+Retrieved Data
+        ↓
+Model Input
+        ↓
+Model Output
+        ↓
+Audit Data
+        ↓
+Telemetry
+```
 
-AI Data
-     │
-     ├── Prompts
-     ├── Conversation State
-     ├── Retrieved Context
-     ├── Tool Results
-     └── Evaluation Data
-Activity 10 — Data Classification
-Every important data source should be classified.
+ These are not necessarily stored in the same place.
 
-Public
-Internal
-Confidential
-Restricted
-Personally Identifiable
-Sensitive
-Regulated
-Then determine:
+---
 
-Can it enter the LLM context?
+ # 18\. AI Data Flow
+
+ A critical architecture question:
+
+ > What information is actually allowed to enter the model context?
+
+ Example:
+
+```
+Employee Request
+      ↓
+Identity
+      ↓
+Authorization
+      ↓
+Allowed Data
+      ↓
+Context Construction
+      ↓
+LLM
+```
+
+ Not:
+
+```
+Employee
+ ↓
+Entire Database
+ ↓
+LLM
+```
+
+---
+
+ # 19\. Data Classification
+
+ Every important data type should be classified.
+
+```
+PUBLIC
+INTERNAL
+CONFIDENTIAL
+RESTRICTED
+PERSONAL
+SENSITIVE
+REGULATED
+```
+
+ Then define:
+
+```
+Can it enter AI context?
 Can it be persisted?
 Can it be logged?
-Can it be retrieved?
-Can it be exposed to the user?
-This is particularly important for LLM architecture.
+Can it be sent to external model providers?
+```
 
-Activity 11 — Integration Architecture
-Identify how the application interacts with external systems.
+ This becomes extremely important in Part 5.
 
-Application
-    │
-    ├── Identity API
-    ├── HR API
-    ├── Policy Repository
-    ├── Notification Service
-    └── AI Model Provider
-For each integration:
+---
 
-## INT-ARCH-001
+ # 20\. Data Architecture Template
 
-### System
+```
+# LADF-025 — Data Architecture
 
-[External System]
+## DATA-001
+
+### Data Name
+
+[Name]
+
+### Description
+
+[Meaning]
+
+### Source
+
+[Source]
+
+### Owner
+
+[Owner]
+
+### Classification
+
+[Classification]
+
+### Storage
+
+[Architectural location]
+
+### Retention
+
+[Retention requirement]
+
+### AI Usage
+
+Allowed / Restricted / Prohibited
+
+### Logging
+
+Allowed / Restricted / Prohibited
+
+### Encryption
+
+Required / Not Required
+
+### Access Control
+
+[Rule]
+
+### Related Requirements
+
+- DATA-XXX
+- SEC-XXX
+```
+
+---
+
+ # 21\. Activity 9 — Integration Architecture
+
+ Determine how systems communicate.
+
+ Examples:
+
+```
+REST API
+GraphQL
+Event
+Message Queue
+Webhook
+Batch
+File
+Database
+SDK
+```
+
+ Architecture should define:
+
+```
+Caller
+ ↓
+Interface
+ ↓
+Protocol
+ ↓
+Authentication
+ ↓
+Request
+ ↓
+Response
+ ↓
+Timeout
+ ↓
+Retry
+ ↓
+Failure
+```
+
+---
+
+ # 22\. Integration Contract
+
+```
+# LADF-026 — Integration Specification
+
+## Integration ID
+
+INT-XXX
+
+## Source
+
+[Component/System]
+
+## Target
+
+[Component/System]
+
+## Purpose
+
+[Purpose]
+
+## Interface
+
+[API/Event/etc.]
+
+## Protocol
+
+[HTTPS/etc.]
+
+## Authentication
+
+[Method]
+
+## Input
+
+[Contract]
+
+## Output
+
+[Contract]
+
+## Timeout
+
+[Requirement]
+
+## Retry
+
+[Requirement]
+
+## Idempotency
+
+[Requirement]
+
+## Failure Behavior
+
+[Behavior]
+
+## Monitoring
+
+[Metrics]
+
+## Owner
+
+[Owner]
+```
+
+---
+
+ # 23\. Activity 10 — API Architecture
+
+ Now define application-facing APIs.
+
+ Example:
+
+```
+POST /conversation/messages
+```
+
+ But don't prematurely lock into a URL if the architecture is still conceptual.
+
+ Define:
+
+```
+API Operation
+Purpose
+Caller
+Input
+Output
+Authentication
+Authorization
+Errors
+Idempotency
+Rate Limit
+Timeout
+```
+
+---
+
+ # 24\. API Specification Template
+
+```
+# LADF-027 — API Specification
+
+## API ID
+
+API-XXX
+
+## Operation
+
+[Name]
+
+## Purpose
+
+[Purpose]
+
+## Consumer
+
+[Consumer]
+
+## Authentication
+
+[Requirement]
+
+## Authorization
+
+[Requirement]
+
+## Request
+
+[Schema]
+
+## Response
+
+[Schema]
+
+## Errors
+
+| Code | Condition | Response |
+|---|---|---|
+| | | |
+
+## Rate Limiting
+
+[Requirement]
+
+## Timeout
+
+[Requirement]
+
+## Idempotency
+
+[Requirement]
+
+## Audit
+
+[Requirement]
+```
+
+---
+
+ # 25\. Activity 11 — AI Architecture Decision
+
+ This is the major transition toward the AI-specific stages.
+
+ ## Role
+
+ **AI Solution Architect + Solution Architect**
+
+ Now ask:
+
+ > Which requirements genuinely require AI?
+
+ We already created the AI Candidate Register in Part 3.
+
+ Now classify each capability.
+
+```
+AI NOT REQUIRED
+       │
+       ├── Deterministic Logic
+       ├── Database Query
+       ├── API Call
+       └── Business Rule
+
+AI REQUIRED
+       │
+       ├── LLM
+       ├── RAG
+       ├── Tool Calling
+       ├── Workflow
+       ├── Agent
+       └── Multi-Agent
+```
+
+---
+
+ # 26\. AI Architecture Decision Tree
+
+ I recommend this decision sequence:
+
+```
+Does the capability require natural-language understanding?
+                 │
+          ┌──────┴──────┐
+          NO            YES
+          │              │
+          ▼              ▼
+     Deterministic      AI?
+                         │
+                         ▼
+                  Is simple generation enough?
+                         │
+                  ┌──────┴──────┐
+                 YES             NO
+                  │               │
+                  ▼               ▼
+              LLM Call       Need external
+                             knowledge?
+                                │
+                         ┌──────┴──────┐
+                        NO             YES
+                         │               │
+                         ▼               ▼
+                     LLM Call           RAG
+                                          │
+                                          ▼
+                                  Need actions/tools?
+                                          │
+                                  ┌───────┴───────┐
+                                 NO              YES
+                                  │                │
+                                  ▼                ▼
+                                 RAG          Tool Calling
+                                                   │
+                                                   ▼
+                                         Multi-step decisions?
+                                                   │
+                                           ┌───────┴──────┐
+                                          NO             YES
+                                           │               │
+                                           ▼               ▼
+                                      Tool Workflow      Agent/
+                                                        LangGraph
+```
+
+ This is much safer than:
+
+```
+Requirement
+   ↓
+Agent
+```
+
+---
+
+ # 27\. AI Architecture Decision Record
+
+ For every significant AI architectural choice:
+
+```
+# ADR-AI-XXX
+
+## Decision
+
+[Decision]
+
+## Requirement
+
+[Requirement]
+
+## Problem
+
+[Problem]
+
+## Options
+
+### Option 1
+[Description]
+
+### Option 2
+[Description]
+
+### Option 3
+[Description]
+
+## Selected
+
+[Option]
+
+## Reason
+
+[Reason]
+
+## Trade-offs
+
+[Trade-offs]
+
+## Risks
+
+[Risks]
+
+## Consequences
+
+[Consequences]
+```
+
+ Example:
+
+```
+Decision:
+
+Use retrieval-based architecture rather than autonomous
+agent architecture.
+
+Reason:
+
+The application only needs to answer questions using
+approved information and does not need autonomous
+multi-step actions.
+
+Consequence:
+
+The solution is simpler, easier to test and easier to control.
+```
+
+---
+
+ # 28\. Activity 12 — RAG Architecture
+
+ If RAG is selected, the architecture must define it.
+
+```
+              KNOWLEDGE INGESTION
+                     │
+                     ▼
+              Document Source
+                     │
+                     ▼
+               Extraction
+                     │
+                     ▼
+                 Chunking
+                     │
+                     ▼
+                Embedding
+                     │
+                     ▼
+              Vector / Index
+                     │
+                     │
+             QUERY TIME
+                     │
+User Question ───────┘
+       │
+       ▼
+ Query Processing
+       │
+       ▼
+    Retrieval
+       │
+       ▼
+ Context Selection
+       │
+       ▼
+ Prompt Construction
+       │
+       ▼
+      LLM
+       │
+       ▼
+    Response
+```
+
+ But Part 4 defines the architecture.
+
+ Part 5 will define the detailed AI behavior.
+
+---
+
+ # 29\. RAG Architecture Questions
+
+ The Architect must answer:
+
+```
+What are authoritative sources?
+How is content ingested?
+How is content updated?
+How is content versioned?
+How is content deleted?
+How is access control applied?
+How are documents indexed?
+How are queries processed?
+How is retrieval performed?
+How is relevance determined?
+How is context constructed?
+How are citations handled?
+What happens when retrieval fails?
+```
+
+ The exact prompt and retrieval implementation comes later.
+
+---
+
+ # 30\. Activity 13 — Agent Architecture Decision
+
+ If an agent is proposed, the Architect should challenge it.
+
+ Ask:
+
+```
+Why does the application need autonomous decision-making?
+
+Why can't deterministic orchestration solve this?
+
+Are multiple steps required?
+
+Are tools dynamically selected?
+
+Does the sequence depend on intermediate results?
+
+Are loops required?
+
+Does the agent need persistent state?
+
+Is human approval required?
+
+What happens if the agent makes an incorrect decision?
+```
+
+ If the answers don't justify an agent:
+
+ > **Do not use an agent.**
+
+ This is one of the most important architecture governance principles.
+
+---
+
+ # 31\. Activity 14 — State Architecture
+
+ For conversational/agentic systems:
+
+```
+                    STATE
+                      │
+        ┌─────────────┼─────────────┐
+        ▼             ▼             ▼
+ Conversation      Workflow       User
+   State             State        State
+        │             │             │
+        └─────────────┼─────────────┘
+                      ▼
+                 Persistence
+```
+
+ Determine:
+
+```
+What state exists?
+Who owns it?
+How long does it live?
+Where is it stored?
+Who can access it?
+Can it be reconstructed?
+What happens after restart?
+What happens after failure?
+```
+
+---
+
+ # 32\. State Specification
+
+```
+# LADF-028 — State Architecture
+
+## STATE-001
+
+### State Name
+
+[Name]
 
 ### Purpose
 
 [Purpose]
 
-### Protocol
+### Owner
 
-[REST / Event / DB / etc.]
+[Component]
 
-### Direction
+### Lifetime
 
-Inbound / Outbound / Bidirectional
+[Request / Session / Conversation / Workflow / Persistent]
 
-### Authentication
+### Contents
 
-[Mechanism]
+- [Field]
 
-### Data
+### Storage
 
-[Data exchanged]
+[Architecture decision]
 
-### Failure Strategy
+### Access
 
-[Strategy]
+[Who can access it?]
 
-### Timeout
+### Security
 
-[TBD]
+[Security requirement]
 
-### Retry
+### Recovery
 
-[Required / Not Required]
+[Recovery behavior]
 
-### Idempotency
+### Deletion
 
-[Requirement]
+[Deletion requirement]
+```
 
-### Availability Dependency
+---
 
-[Critical / Non-critical]
-Activity 12 — AI Architecture Decision
-This is the most important new activity compared with traditional application architecture.
+ # 33\. Activity 15 — Security Architecture
 
-We now ask:
+ ## Role
 
-What role should AI play in this system?
+ **Security Architect**
 
-Possible patterns:
+ Security must be designed around the AI system, not added afterward.
 
-Pattern A
-No AI
+ Architecture should cover:
 
-Pattern B
-Simple LLM
-
-Pattern C
-LLM + Structured Output
-
-Pattern D
-LLM + RAG
-
-Pattern E
-LLM + Tools
-
-Pattern F
-Workflow + LLM
-
-Pattern G
-Agent + Tools
-
-Pattern H
-Stateful Agentic Workflow
-
-Pattern I
-Multi-Agent System
-13. AI Pattern Selection
-We should use a decision process rather than saying:
-
-"Let's build an agent."
-
-Question 1
-Does the application need natural-language understanding/generation?
-
-If no:
-
-No LLM
-If yes:
-
-Continue
-Question 2
-Does the AI need external knowledge?
-
-If yes:
-
-Consider RAG / retrieval / external data
-Question 3
-Does AI need to execute actions?
-
-If yes:
-
-Consider tools
-Question 4
-Does AI need to choose among tools dynamically?
-
-If yes:
-
-Consider agentic architecture
-Question 5
-Does the process have a known sequence?
-
-If yes:
-
-Prefer deterministic workflow
-rather than an autonomous agent.
-
-Question 6
-Does the workflow need durable state?
-
-If yes:
-
-Stateful workflow / LangGraph-style architecture
-may be appropriate.
-
-14. The Agent Decision Principle
-I strongly recommend this rule:
-
-Use an agent only when dynamic decision-making is actually required.
-
-For example:
-
-Known process:
-
-Validate
- ↓
-Retrieve
- ↓
-Generate
- ↓
-Validate
-
-doesn't necessarily need an agent.
-
-A workflow is sufficient.
-
-But:
-
-User
- ↓
-Agent
- ↓
-Decide what information is needed
- ↓
-Choose Tool A
- ↓
-Analyze result
- ↓
-Choose Tool B
- ↓
-Analyze result
- ↓
-Ask user for approval
- ↓
-Execute action
-is genuinely agentic.
-
-This distinction should be documented in the architecture.
-
-Activity 13 — LLM Interaction Architecture
-Now define how the application interacts with the LLM.
-
-Example:
-
-User
- ↓
-API
- ↓
-Request Validation
- ↓
-Context Preparation
- ↓
-Prompt Construction
- ↓
-LLM
- ↓
-AI Response
- ↓
-Output Validation
- ↓
-Business Validation
- ↓
-Application Response
-This directly relates to your original 8-step process.
-
-Your original:
-
-1. Requirement Analysis
-2. Craft Prompt
-3. Create Template
-4. Get User Input
-5. Invoke Template
-6. Invoke LLM
-7. Hold AIMessage
-8. Display Response
-has now been architecturally expanded into:
-
-Business Requirement
-        ↓
-System Requirement
-        ↓
-Architecture
-        ↓
-AI Specification
-        ↓
-Input Contract
-        ↓
-Context Construction
-        ↓
-Prompt Construction
-        ↓
-Model Invocation
-        ↓
-AI Response
-        ↓
-Output Validation
-        ↓
-Business Validation
-        ↓
-Application Response
-So the original 8 steps become only a small runtime portion of the complete lifecycle.
-
-Activity 14 — RAG Architecture
-If the requirements require authoritative external knowledge, we evaluate RAG.
-
-The architecture may become:
-
-                Documents
-                    │
-                    ▼
-             Ingestion Pipeline
-                    │
-          ┌─────────┴─────────┐
-          ▼                   ▼
-     Chunking             Metadata
-          │
-          ▼
-      Embedding
-          │
-          ▼
-   Vector / Search Store
-Runtime:
-
-User Question
-      ↓
-Query Processing
-      ↓
-Retriever
-      ↓
-Relevant Documents
-      ↓
-Context Construction
-      ↓
-Prompt
-      ↓
-LLM
-      ↓
-Answer
-Architecture decisions include:
-
-Source of truth
-Ingestion
-Document processing
-Chunking strategy
-Metadata
-Retrieval
-Filtering
-Authorization filtering
-Ranking
-Context construction
-Freshness
-Index updates
-Detailed retrieval configuration belongs later in the AI Specification.
-
-Activity 15 — Tool Architecture
-If the system must perform actions or access external systems, define tools architecturally.
-
-Example:
-
-                   AI Capability
-                        │
-             ┌──────────┼──────────┐
-             ▼          ▼          ▼
-        Policy Tool   HR Tool   Search Tool
-             │          │          │
-             ▼          ▼          ▼
-          Policy      HR API    Knowledge
-          System                 Service
-But an important security principle:
-
-The existence of an API does not mean the LLM should have access to it.
-
-The architecture defines:
-
-Available Tool
-     ↓
+```
+Identity
+Authentication
 Authorization
-     ↓
-Tool Invocation
-     ↓
-Validation
-     ↓
-External System
-Activity 16 — State & Memory Architecture
-Now determine whether state exists.
+Data Access
+Secrets
+Encryption
+Network Security
+Prompt Injection
+Data Leakage
+Tool Authorization
+Model Provider Security
+Logging
+Audit
+Tenant Isolation
+```
 
-Potential architecture:
+---
 
-                  Application
-                       │
-                       ▼
-                State Manager
-                  /       \
-                 /         \
-                ▼           ▼
-       Conversation      Workflow
-          State            State
-                \           /
-                 \         /
-                  ▼       ▼
-                  State Store
-Distinguish:
+ # 34\. AI Security Boundary
 
-Conversation history
-What model can suggest an has the user said?
+ One critical principle:
 
-Application state
-What does the application know about the current request?
-
-Workflow state
-Where is a multi-step process?
-
-Long-term memory
-What should persist across sessions?
-
-These are different concepts and should not be combined casually.
-
-Activity 17 — Security Architecture
-This deserves its own architecture.
-
-A typical flow:
-
+```
 User
  ↓
 Authentication
  ↓
 Authorization
  ↓
-Request Validation
+Allowed Context
  ↓
-Business Authorization
+AI
+```
+
+ Not:
+
+```
+User
  ↓
-AI Processing
+AI
  ↓
-Tool Authorization
- ↓
-External System
-Important architecture rule:
+AI decides whether user is authorized
+```
 
-LLM ≠ Security Boundary
-The model can suggest an action.
+ The LLM can help interpret a request, but **authorization must be enforced by deterministic application controls**.
 
-The application must enforce whether that action is allowed.
+---
 
-Activity 18 — Prompt Security Architecture
-LLM applications introduce additional concerns.
+ # 35\. AI Threat Model
 
-The architecture should account for:
+ The architecture should consider:
 
+```
 Prompt Injection
 Indirect Prompt Injection
-Data Leakage
-Sensitive Context Exposure
-Tool Abuse
-Unauthorized Tool Invocation
-Malicious User Input
-Untrusted Retrieved Content
-Output Manipulation
-The architecture should therefore define boundaries between:
+Sensitive Information Disclosure
+Data Exfiltration
+Unauthorized Tool Usage
+Privilege Escalation
+Malicious Documents
+Insecure Output Handling
+Model Manipulation
+Denial of Service
+Excessive Token Consumption
+Third-Party Model Risk
+```
 
-Trusted Instructions
-        +
-User Input
-        +
-External Retrieved Content
-        +
-Tool Results
-These are not equivalent trust levels.
+ Detailed AI security controls will later feed the AI/Agent specifications.
 
-Activity 19 — Reliability Architecture
-Ask:
+---
 
-What happens when each dependency fails?
+ # 36\. Activity 16 — Resilience Architecture
 
-For example:
+ Every external dependency needs failure behavior.
 
+ Consider:
+
+```
 LLM unavailable
-      ↓
-Fallback?
-
+LLM timeout
+LLM rate limited
 Retriever unavailable
-      ↓
-Fallback?
-
+Database unavailable
 Tool unavailable
-      ↓
-Retry / Alternative / Stop?
+Network failure
+Invalid model output
+Invalid tool response
+Workflow interruption
+State corruption
+```
 
-Invalid AI output
-      ↓
-Retry / Repair / Reject?
+ Architecture should determine:
 
-Timeout
-      ↓
-Cancel / Retry?
+```
+Retry?
+Fallback?
+Circuit breaker?
+Queue?
+Degrade?
+Human escalation?
+Fail closed?
+Fail open?
+```
 
-External API failure
-      ↓
-Rollback?
-Create a dependency failure matrix.
+---
 
-Dependency	Failure	Response	User Impact
-LLM	Timeout	Retry/fallback	Delayed
-Retriever	Unavailable	Safe fallback	Limited
-HR API	Error	Stop operation	Action unavailable
-State Store	Failure	Fail safely	Session unavailable
-Activity 20 — Performance Architecture
-Determine where latency occurs:
+ # 37\. Resilience Pattern
 
-User
- ↓
-Network
- ↓
+ Example:
+
+```
+                 Request
+                    │
+                    ▼
+                  LLM
+                    │
+             ┌──────┴──────┐
+             │             │
+          Success        Failure
+             │             │
+             ▼             ▼
+          Response       Retry
+                           │
+                     ┌─────┴─────┐
+                     │           │
+                  Success      Failure
+                     │           │
+                     ▼           ▼
+                  Response    Fallback
+                                 │
+                                 ▼
+                              Escalate
+```
+
+ The exact number of retries belongs in the implementation specification after architecture validates the strategy.
+
+---
+
+ # 38\. Activity 17 — Performance Architecture
+
+ Architecture must identify the major contributors to latency.
+
+ For LLM applications:
+
+```
+Total Latency
+=
 API
- ↓
++
+Authentication
++
 Validation
- ↓
++
 Retrieval
- ↓
-Prompt Construction
- ↓
-LLM
- ↓
-Output Processing
- ↓
-Network
- ↓
-User
-Then identify:
-
-Latency Budget
-Throughput
-Concurrency
-Streaming
-Caching
-Batching
-Async Processing
-Model Selection
-Retrieval Performance
-Activity 21 — Cost Architecture
-LLM applications introduce a new architecture dimension:
-
-AI Cost
-Potential cost sources:
-
-Input Tokens
-Output Tokens
-Embedding
-Retrieval Infrastructure
-Model API
++
 Tool Calls
-Storage
-Tracing
-Evaluation
-Architecture should identify:
-
-Cost per request
-Cost per user
-Cost per workflow
-Cost per month
-and possible controls:
-
-Caching
-Model routing
-Token limits
-Context optimization
-Prompt optimization
-Request limits
-Budget controls
-Activity 22 — Observability Architecture
-For traditional systems:
-
-Logs
-Metrics
-Traces
-For LLM systems, we additionally need:
-
-Prompt version
-Model
-Model parameters
-Input metadata
-Retrieved context metadata
-Tool calls
-Agent steps
-Latency
-Token usage
-Output
-Evaluation result
-Potential architecture:
-
-Application
-    │
-    ├── Logs
-    ├── Metrics
-    └── Traces
-          │
-          ▼
-     AI Observability
-          │
-          ├── LLM Calls
-          ├── Retrieval
-          ├── Tool Calls
-          ├── Workflow
-          └── Evaluations
-Actual observability technology is selected later.
-
-Activity 23 — Infrastructure Architecture
-Now move from logical architecture to physical/runtime architecture.
-
-Example:
-
-                    Internet
-                       │
-                       ▼
-                  API Gateway
-                       │
-                       ▼
-               Application Service
-                       │
-          ┌────────────┼────────────┐
-          ▼            ▼            ▼
-      AI Service    State Store   Cache
-          │
-     ┌────┴────┐
-     ▼         ▼
-   Model     Retriever
-     │         │
-     │         ▼
-     │      Knowledge
-     │       Store
-     │
-     ▼
- External Model Provider
-Then define:
-
-Runtime
-Compute
++
+Prompt Construction
++
+LLM
++
+Output Parsing
++
+Business Processing
++
 Network
+```
+
+ For streaming:
+
+```
+Time to First Token
+```
+
+ may matter more than:
+
+```
+Total Response Time
+```
+
+ depending on requirements.
+
+---
+
+ # 39\. Performance Architecture Questions
+
+```
+What is expected concurrency?
+What is target latency?
+Is streaming required?
+What is maximum context size?
+How expensive is retrieval?
+Are tools sequential or parallel?
+Can operations be cached?
+Can responses be cached?
+What happens during LLM provider latency spikes?
+```
+
+---
+
+ # 40\. Activity 18 — Scalability Architecture
+
+ Determine whether the system needs to scale:
+
+```
+Users
+Requests
+Tokens
+Documents
+Retrieval
+Tool Calls
+Concurrent Workflows
+Conversation State
+```
+
+ Architecture should distinguish:
+
+```
+Application Scalability
+LLM Scalability
+Data Scalability
+Retrieval Scalability
+Workflow Scalability
+Infrastructure Scalability
+```
+
+---
+
+ # 41\. Activity 19 — Cost Architecture
+
+ This is especially important for LLM applications.
+
+ Architecture should estimate:
+
+```
+LLM Cost
+Embedding Cost
+Retrieval Infrastructure
+Database
 Storage
-Secrets
-Configuration
-Scaling
-Disaster recovery
-Activity 24 — Technology Selection
-Only now do we select technologies.
+Network
+Observability
+Tool/API Costs
+Compute
+```
 
-Example categories:
+ Conceptually:
 
-Architecture Need	Technology Decision
-LLM orchestration	LangChain
-Stateful workflow	LangGraph
-LLM provider	Selected model/provider
-Observability	LangSmith / other
-API	Selected API framework
-State	Selected database
-Retrieval	Selected search/vector technology
-Cache	Selected cache
-Deployment	Selected platform
-The principle is:
+```
+Total Cost
+=
+Infrastructure
++
+Model Input Tokens
++
+Model Output Tokens
++
+Embedding
++
+Retrieval
++
+Tools
++
+Observability
+```
 
-Technology selection follows architecture; architecture follows requirements.
+ The exact cost model will later become part of deployment/operations.
 
-Not:
+---
 
-"We use LangChain, therefore everything must become a LangChain abstraction."
+ # 42\. Activity 20 — Observability Architecture
 
-Activity 25 — LangChain Ecosystem Mapping
-Now we can map architecture to the LangChain ecosystem.
+ An LLM application requires more than normal application logs.
 
-Example:
+ Architecture should support:
 
-Architecture Requirement
-        ↓
-AI Orchestration
-        ↓
-LangChain Runnable / LCEL
-Prompt Requirement
-        ↓
-Prompt Component
-        ↓
-ChatPromptTemplate
-Model Requirement
-        ↓
-Chat Model Abstraction
-Retrieval Requirement
-        ↓
-Retriever Abstraction
-Tool Requirement
-        ↓
-Tool Abstraction
-Agentic Requirement
-        ↓
-Agent / LangGraph Architecture
-Stateful Workflow
-        ↓
-LangGraph State
-Tracing / Evaluation
-        ↓
-LangSmith ecosystem
-But this mapping should be documented as an implementation technology mapping, not as the original business requirement.
+```
+Application Logs
+       +
+Metrics
+       +
+Distributed Traces
+       +
+LLM Traces
+       +
+Token Usage
+       +
+Latency
+       +
+Tool Calls
+       +
+Retrieval Information
+       +
+Evaluation Results
+```
 
-Activity 26 — Architecture Decision Records
-Every important architectural choice gets an ADR.
+ A conceptual trace:
 
-Template
-# LADF-040 — Architecture Decision Record
+```
+Request
+  │
+  ├── Authentication
+  ├── Application Service
+  ├── Retrieval
+  ├── Prompt Construction
+  ├── LLM Call
+  ├── Tool Call
+  ├── Output Validation
+  └── Response
+```
 
-## ADR ID
+ This will be essential later when using the LangChain ecosystem's tracing/evaluation capabilities.
 
-ADR-XXX
+---
 
-## Title
+ # 43\. Activity 21 — Infrastructure Architecture
 
-[Decision]
+ Now define where the solution runs.
+
+ Potential components:
+
+```
+Frontend
+API
+Application Runtime
+AI Orchestration Runtime
+Database
+Vector/Search Store
+Cache
+Message Queue
+Object Storage
+Secrets Manager
+Identity Provider
+LLM Provider
+Monitoring
+Logging
+Tracing
+```
+
+ Architecture should remain cloud-neutral initially unless the project has a mandatory cloud constraint.
+
+---
+
+ # 44\. Environment Architecture
+
+ At minimum:
+
+```
+Development
+      ↓
+Test
+      ↓
+Staging
+      ↓
+Production
+```
+
+ For AI applications, consider also:
+
+```
+Evaluation Environment
+```
+
+ This is important because prompt/model changes should ideally be evaluated before production.
+
+---
+
+ # 45\. Activity 22 — Technology Selection
+
+ Only now should we start choosing concrete technologies.
+
+ Possible decision areas:
+
+```
+Application Framework
+API Framework
+Database
+Cache
+Search
+Vector Store
+LLM Provider
+Embedding Model
+Agent Framework
+Workflow Framework
+Observability
+Cloud
+Containerization
+CI/CD
+```
+
+ And this is where your desired ecosystem enters.
+
+ For example:
+
+```
+AI Application
+      │
+      ▼
+LangChain Ecosystem
+      │
+ ┌────┼──────────────┐
+ ▼    ▼              ▼
+LCEL  LangGraph    Retrieval
+      │
+      ▼
+   Agent/Workflow
+```
+
+ But the selection must be justified by requirements.
+
+---
+
+ # 46\. LangChain Ecosystem Mapping
+
+ At the architecture stage, we create a **technology mapping**, not code.
+
+ | Architectural Capability | Potential Technology Mapping |
+| --- | --- |
+| Prompt abstraction | LangChain |
+| Model abstraction | LangChain integrations |
+| Runnable composition | LangChain / LCEL |
+| Retrieval | LangChain retriever abstractions |
+| Tool integration | LangChain tools |
+| Agent workflow | LangGraph |
+| Stateful execution | LangGraph |
+| Checkpointing | LangGraph persistence |
+| Tracing | LangSmith ecosystem |
+| Evaluation | LangSmith / evaluation tooling |
+| Application API | FastAPI or equivalent |
+| Persistence | Selected database |
+| Search | Selected search/vector technology |
+
+ The important word is **potential**.
+
+ The final technology decision belongs in the ADR.
+
+---
+
+ # 47\. Activity 23 — Architecture Decision Records
+
+ Every meaningful architectural choice gets an ADR.
+
+ Examples:
+
+```
+ADR-001 Architectural Style
+ADR-002 API Technology
+ADR-003 LLM Provider
+ADR-004 RAG vs Non-RAG
+ADR-005 Agent vs Workflow
+ADR-006 Vector Store
+ADR-007 State Persistence
+ADR-008 Authentication
+ADR-009 Deployment Platform
+ADR-010 Observability
+```
+
+---
+
+ # 48\. ADR Template
+
+```
+# ADR-XXX — [Decision Title]
 
 ## Status
 
 Proposed / Accepted / Rejected / Superseded
 
+## Date
+
+[Date]
+
 ## Context
 
-[What problem are we solving?]
+[Why is this decision required?]
 
-## Decision
+## Problem
 
-[What was decided?]
+[Problem being solved.]
 
-## Alternatives Considered
+## Requirements
+
+- [Requirement]
+
+## Options
 
 ### Option A
 
 [Description]
 
+Advantages:
+-
+
+Disadvantages:
+-
+
 ### Option B
 
 [Description]
 
-### Option C
+Advantages:
+-
 
-[Description]
+Disadvantages:
+-
 
-## Decision Rationale
+## Decision
 
-[Why was this selected?]
+[Selected option]
+
+## Rationale
+
+[Why selected]
 
 ## Consequences
 
 ### Positive
 
-- 
+-
 
 ### Negative
 
-- 
+-
 
-### Risks
+## Risks
 
-- 
+-
 
-## Requirements Affected
+## Related Requirements
 
-- SYS-XXX
-- NFR-XXX
+-
 
-## Date
+## Related Decisions
 
-[Date]
+-
+```
 
-## Decision Owner
+---
 
-[Architect]
-27. Example ADR
-# ADR-001 — Workflow Instead of Autonomous Agent
+ # 49\. Activity 24 — Architecture Risk Analysis
 
-## Context
+ Architecture risks should now be identified.
 
-The application needs to execute a known sequence:
+```
+ARCH-001
+Model provider dependency
 
-1. Validate request
-2. Retrieve information
-3. Generate response
-4. Validate response
+ARCH-002
+Retrieval quality
 
-The sequence is predictable and does not require dynamic
-tool selection.
+ARCH-003
+LLM latency
 
-## Decision
+ARCH-004
+Token cost
 
-Use a deterministic workflow containing an LLM capability
-rather than an autonomous agent.
+ARCH-005
+Sensitive data exposure
 
-## Rationale
+ARCH-006
+Agent non-determinism
 
-The workflow provides greater predictability, easier testing,
-lower operational complexity, and clearer control over
-business rules.
+ARCH-007
+External tool failure
 
-## Consequences
+ARCH-008
+State persistence failure
 
-Positive:
+ARCH-009
+Vendor lock-in
 
-- Easier testing
-- Better predictability
-- Lower complexity
-- Easier observability
+ARCH-010
+Insufficient observability
+```
 
-Negative:
+---
 
-- Less dynamic behavior
-- Future dynamic tool selection would require architecture
-  evolution
-This is exactly the kind of decision an architect should record.
+ # 50\. Activity 25 — Architecture Validation
 
-28. Architecture Quality Attributes
-The architecture should explicitly evaluate:
+ Now perform a requirement-to-architecture validation.
 
-Security
-Performance
-Scalability
-Availability
-Reliability
-Maintainability
-Testability
-Observability
-Cost
-Extensibility
-Portability
-Compliance
-Usability
-AI Quality
-We can create a quality attribute matrix.
+ For each requirement:
 
-| Attribute | Requirement | Architecture Response | Validation |
-|---|---|---|---|
-| Security | SEC-001 | | |
-| Performance | PERF-001 | | |
-| Availability | AVAIL-001 | | |
-| Cost | COST-001 | | |
-29. Architecture Trade-Off Analysis
-Architecture is fundamentally about trade-offs.
+```
+Requirement
+     ↓
+Which component satisfies it?
+     ↓
+Which interface?
+     ↓
+Which data?
+     ↓
+Which security control?
+     ↓
+Which failure strategy?
+     ↓
+Which test?
+```
 
-For example:
+ Example:
 
-More autonomy
-      ↕
-More control
+```
+SYS-FR-003
+System must authenticate employee.
 
-More context
-      ↕
-More token cost
+        ↓
 
-Larger model
-      ↕
-Higher cost/latency
+Identity Component
 
-More retrieval
-      ↕
-More context complexity
+        ↓
 
-More state
-      ↕
-More persistence complexity
+Authentication Interface
 
-More agents
-      ↕
-More orchestration complexity
-These should be explicitly considered.
+        ↓
 
-30. Architecture Risk Register
-Create architecture-specific risks.
+Authorization Context
 
-# LADF-041 — Architecture Risk Register
+        ↓
 
-| ID | Risk | Probability | Impact | Mitigation | Owner |
-|---|---|---|---|---|---|
-| ARCH-R-001 | | | | | |
-Examples:
+Security Architecture
 
-ARCH-R-001
-Model provider outage
+        ↓
 
-ARCH-R-002
-Retrieval quality insufficient
+SEC-001
+```
 
-ARCH-R-003
-Agent performs unintended tool action
+ If a requirement has no architectural owner:
 
-ARCH-R-004
-Token cost exceeds budget
+ > **Architecture is incomplete.**
 
-ARCH-R-005
-State storage becomes bottleneck
+---
 
-ARCH-R-006
-Sensitive data enters model context
-31. Architecture Sequence Diagram
-For every important use case, create a sequence.
+ # 51\. Architecture Traceability Matrix
 
-Example:
+```
+# LADF-029 — Architecture Traceability
 
-User
- │
- │ Question
- ▼
-API
- │
- │ Validate
- ▼
+| Requirement | Component | Interface | Data | Security | ADR | Test |
+|---|---|---|---|---|---|---|
+| SYS-FR-001 | CMP-001 | API-001 | DATA-001 | SEC-001 | ADR-001 | TBD |
+| SYS-FR-002 | CMP-003 | INT-001 | DATA-002 | SEC-002 | ADR-003 | TBD |
+```
+
+ This becomes extremely valuable during development.
+
+---
+
+ # 52\. Activity 26 — Developer-Level Architecture
+
+ The Architect now creates a design sufficiently detailed for the Technical Lead.
+
+ But we still stop short of coding.
+
+ For example:
+
+```
 Application
- │
- │ Prepare Context
- ▼
-Retriever
- │
- │ Documents
- ▼
-Application
- │
- │ Prompt + Context
- ▼
-LLM
- │
- │ AI Response
- ▼
-Application
- │
- │ Validate
- ▼
-API
- │
- │ Response
- ▼
-User
-This becomes extremely valuable later when creating the Agent/Workflow Specification.
+│
+├── API
+│
+├── Application Services
+│
+├── Domain
+│
+├── AI Orchestration
+│   ├── Prompt
+│   ├── Model
+│   ├── Retrieval
+│   ├── Tools
+│   └── Output Validation
+│
+├── State
+│
+├── Infrastructure
+│
+└── Observability
+```
 
-32. Architecture State Diagram
-For stateful systems:
+ This is the point where Part 8's Developer Handoff will eventually become concrete.
 
-NEW
- │
- ▼
-RECEIVED
- │
- ▼
-PROCESSING
- │
- ├─────────────┐
- ▼             ▼
-WAITING       FAILED
- │
- ▼
-RESUMED
- │
- ▼
-COMPLETED
-For agentic workflows this becomes even more important.
+---
 
-33. Architecture Component Contract
-Every major component should have a contract.
+ # 53\. Architecture Package
 
-## Component: AI Orchestrator
+ The complete Part 4 package should look like:
 
-### Responsibility
-
-Coordinates AI processing.
-
-### Inputs
-
-- Validated user request
-- Authorized context
-
-### Outputs
-
-- Validated AI result
-
-### Dependencies
-
-- Prompt service
-- Model service
-- Retrieval service
-
-### Does Not Own
-
-- Authentication
-- Authorization
-- Business database
-
-### Failure Modes
-
-- Model unavailable
-- Invalid response
-- Timeout
-
-### Security Boundary
-
-[Description]
-This becomes very useful for developers.
-
-34. Architecture Artifact Package
-At the end of Part 4, the package should look like:
-
+```
 03_SOLUTION_ARCHITECTURE/
 │
-├── 01_ARCHITECTURE_DOCUMENT.md
+├── 01_ARCHITECTURE_OVERVIEW.md
 │
-├── 02_ARCHITECTURE_INTAKE.md
+├── 02_ARCHITECTURE_DRIVERS.md
 │
-├── 03_ARCHITECTURE_DRIVERS.md
+├── 03_ARCHITECTURE_PRINCIPLES.md
 │
-├── 04_ARCHITECTURE_PRINCIPLES.md
+├── 04_SYSTEM_CONTEXT.md
 │
-├── 05_SYSTEM_CONTEXT.md
+├── 05_SYSTEM_BOUNDARY.md
 │
-├── 06_LOGICAL_ARCHITECTURE.md
+├── 06_ARCHITECTURAL_STYLE.md
 │
-├── 07_COMPONENT_ARCHITECTURE.md
+├── 07_LOGICAL_ARCHITECTURE.md
 │
-├── 08_APPLICATION_ARCHITECTURE.md
+├── 08_COMPONENT_ARCHITECTURE.md
 │
-├── 09_DATA_ARCHITECTURE.md
+├── 09_APPLICATION_ARCHITECTURE.md
 │
-├── 10_INTEGRATION_ARCHITECTURE.md
+├── 10_DATA_ARCHITECTURE.md
 │
-├── 11_AI_ARCHITECTURE_DECISION.md
+├── 11_INTEGRATION_ARCHITECTURE.md
 │
-├── 12_LLM_INTERACTION_ARCHITECTURE.md
+├── 12_API_ARCHITECTURE.md
 │
-├── 13_RAG_ARCHITECTURE.md
+├── 13_AI_ARCHITECTURE.md
 │
-├── 14_TOOL_ARCHITECTURE.md
+├── 14_RAG_ARCHITECTURE.md
 │
-├── 15_AGENT_WORKFLOW_DECISION.md
+├── 15_AGENT_ARCHITECTURE.md
 │
-├── 16_STATE_MEMORY_ARCHITECTURE.md
+├── 16_STATE_ARCHITECTURE.md
 │
 ├── 17_SECURITY_ARCHITECTURE.md
 │
-├── 18_RELIABILITY_ARCHITECTURE.md
+├── 18_RESILIENCE_ARCHITECTURE.md
 │
 ├── 19_PERFORMANCE_ARCHITECTURE.md
 │
-├── 20_COST_ARCHITECTURE.md
+├── 20_SCALABILITY_ARCHITECTURE.md
 │
-├── 21_OBSERVABILITY_ARCHITECTURE.md
+├── 21_COST_ARCHITECTURE.md
 │
-├── 22_INFRASTRUCTURE_ARCHITECTURE.md
+├── 22_OBSERVABILITY_ARCHITECTURE.md
 │
-├── 23_TECHNOLOGY_SELECTION.md
+├── 23_INFRASTRUCTURE_ARCHITECTURE.md
 │
-├── 24_COMPONENT_CONTRACTS.md
+├── 24_ENVIRONMENT_ARCHITECTURE.md
 │
-├── 25_SEQUENCE_DIAGRAMS/
+├── 25_TECHNOLOGY_SELECTION.md
 │
-├── 26_STATE_DIAGRAMS/
+├── 26_ARCHITECTURE_DECISIONS/
 │
-├── 27_ADR/
+├── 27_THREAT_MODEL.md
 │
 ├── 28_ARCHITECTURE_RISKS.md
 │
-└── 29_ARCHITECTURE_TRACEABILITY.md
-35. Master Solution Architecture Document
-The primary document should contain:
+├── 29_TRACEABILITY_MATRIX.md
+│
+└── 30_ARCHITECTURE_REVIEW.md
+```
 
+---
+
+ # 54\. Master Solution Architecture Document
+
+ The primary document should contain:
+
+```
 # LADF-020 — Solution Architecture Document
 
-# 1. Document Control
+## 1. Document Control
 
-# 2. Executive Summary
+## 2. Executive Summary
 
-# 3. Architecture Objectives
+## 3. Architecture Objectives
 
-# 4. Architecture Scope
+## 4. Business Context
 
-# 5. Requirements Summary
+## 5. Architecture Drivers
 
-# 6. Architecture Drivers
+## 6. Architecture Principles
 
-# 7. Architecture Principles
+## 7. Assumptions
 
-# 8. Assumptions
+## 8. Constraints
 
-# 9. Constraints
+## 9. System Context
 
-# 10. System Context
+## 10. System Boundary
 
-# 11. Logical Architecture
+## 11. Architectural Style
 
-# 12. Component Architecture
+## 12. Logical Architecture
 
-# 13. Application Architecture
+## 13. Component Architecture
 
-# 14. Data Architecture
+## 14. Application Architecture
 
-# 15. Integration Architecture
+## 15. Data Architecture
 
-# 16. AI Architecture
+## 16. Integration Architecture
 
-# 17. LLM Interaction Architecture
+## 17. API Architecture
 
-# 18. RAG Architecture
+## 18. AI Architecture
 
-# 19. Tool Architecture
+## 19. RAG Architecture
 
-# 20. Agent / Workflow Architecture
+## 20. Agent/Workflow Architecture
 
-# 21. State / Memory Architecture
+## 21. State Architecture
 
-# 22. Security Architecture
+## 22. Security Architecture
 
-# 23. Reliability Architecture
+## 23. Privacy Architecture
 
-# 24. Performance Architecture
+## 24. Resilience Architecture
 
-# 25. Scalability Architecture
+## 25. Performance Architecture
 
-# 26. Cost Architecture
+## 26. Scalability Architecture
 
-# 27. Observability Architecture
+## 27. Cost Architecture
 
-# 28. Infrastructure Architecture
+## 28. Observability Architecture
 
-# 29. Technology Selection
+## 29. Infrastructure Architecture
 
-# 30. Architecture Decisions
+## 30. Environment Architecture
 
-# 31. Alternatives Considered
+## 31. Technology Selection
 
-# 32. Architecture Risks
+## 32. Architecture Decisions
 
-# 33. Architecture Trade-Offs
+## 33. Threat Model
 
-# 34. Sequence Diagrams
+## 34. Risks
 
-# 35. State Diagrams
+## 35. Requirement Traceability
 
-# 36. Component Contracts
+## 36. Open Questions
 
-# 37. Traceability
+## 37. Architecture Validation
 
-# 38. Open Questions
+## 38. Approval
+```
 
-# 39. Approval
-36. Role Responsibility Matrix
-Now explicitly define who does what.
+---
 
-Activity	Solution Architect	AI Architect	Security Architect	Data Architect	Tech Lead
-Architecture Drivers	A/R	C	C	C	C
-System Boundary	A/R	C	C	C	C
-Logical Architecture	A/R	C	C	C	C
-Component Architecture	A/R	C	C	C	C
-Data Architecture	A	C	C	R	C
-Integration Architecture	A/R	C	C	C	C
-AI Architecture	A	R	C	C	C
-RAG Architecture	A	R	C	C	C
-Tool Architecture	A	R	C	C	C
-Agent/Workflow	A	R	C	C	C
-Security Architecture	A	C	R	C	C
-Infrastructure	A	C	C	C	R
-Technology Selection	A/R	R	C	C	C
-ADRs	A/R	R	C	C	C
-Architecture Approval	A	C	C	C	C
-Where:
+ # 55\. Most Important Architecture Diagrams
 
-R = Responsible
-A = Accountable
-C = Consulted
-37. Architecture → AI Architect Handoff
-This is the most important boundary at the end of Part 4.
+ The Architecture Package should ideally contain these diagrams.
 
-The Solution Architect should hand the AI Architect:
+ ### 1\. System Context
 
-              SOLUTION ARCHITECTURE
-                       │
-                       ▼
-              AI Architecture Boundary
-                       │
-        ┌──────────────┼───────────────┐
-        ▼              ▼               ▼
-    AI Inputs      AI Capabilities   AI Outputs
-        │              │               │
-        ▼              ▼               ▼
-     Context          Model         Response
-        │              │               │
-        └──────────────┼───────────────┘
-                       ▼
-              AI ARCHITECTURE PACKAGE
-The handoff should explicitly state:
+```
+User → System → External Systems
+```
 
-AI is required for
-AI-001 Natural-language interpretation
-AI-002 Response generation
-AI-003 Explanation generation
-AI is NOT responsible for
-Authentication
-Authorization
-Business authorization
-Transaction integrity
-Security enforcement
-Possible AI architecture
-LLM + Retrieval
-Agent required?
-No — deterministic workflow is sufficient.
-or:
+ ### 2\. Container/Component Architecture
 
-Yes — dynamic tool selection is required.
-State required?
-Conversation state required.
-Tools required?
-Policy search
-HR information lookup
-This gives the AI Architect a precise starting point.
+```
+Application
+├── API
+├── Services
+├── AI
+├── Data
+└── Infrastructure
+```
 
-38. Part 4 Stage Gate — Architecture Ready
-We now define:
+ ### 3\. Data Flow
 
-Gate 3 — Architecture Approved
-The architecture is ready only when:
+```
+Input → Processing → Data → AI → Output
+```
 
+ ### 4\. Sequence Diagram
+
+```
+User
+ ↓
+API
+ ↓
+Service
+ ↓
+Retriever
+ ↓
+LLM
+ ↓
+Service
+ ↓
+User
+```
+
+ ### 5\. Security Boundary
+
+```
+Internet
+   │
+Firewall
+   │
+Application
+   │
+Private Services
+   │
+Data
+```
+
+ ### 6\. AI Architecture
+
+```
+User
+ ↓
+Application
+ ↓
+AI Orchestration
+ ├── Prompt
+ ├── Retrieval
+ ├── Model
+ └── Tools
+```
+
+ ### 7\. Deployment Architecture
+
+```
+Client
+ ↓
+Load Balancer
+ ↓
+Application
+ ↓
+Database / Search / AI
+```
+
+ ### 8\. Agent Workflow
+
+ Only if an agent/workflow exists:
+
+```
+START
+ ↓
+CLASSIFY
+ ↓
+RETRIEVE
+ ↓
+DECIDE
+ ├── TOOL A
+ ├── TOOL B
+ └── ANSWER
+ ↓
+VALIDATE
+ ↓
+END
+```
+
+---
+
+ # 56\. Architecture Gate — Gate 3
+
+ Part 4 is complete only when the following are true.
+
+ ## Architecture Readiness Checklist
+
+```
+✓ All SRS requirements mapped
 ✓ Architecture drivers identified
 ✓ Architecture principles defined
 ✓ System boundary defined
-✓ Context architecture completed
-✓ Logical architecture completed
-✓ Component architecture completed
-✓ Application architecture completed
-✓ Data architecture completed
-✓ Integration architecture completed
-✓ AI architecture decision completed
-✓ RAG decision completed where relevant
-✓ Tool decision completed where relevant
-✓ Agent/workflow decision completed
-✓ State/memory decision completed
-✓ Security architecture completed
-✓ Reliability architecture completed
-✓ Performance considerations completed
-✓ Scalability considered
-✓ Cost considered
-✓ Observability designed
-✓ Infrastructure architecture defined
-✓ Technology categories selected
-✓ Major ADRs documented
-✓ Major alternatives evaluated
-✓ Architecture risks documented
-✓ Sequence diagrams completed
+✓ External systems identified
+✓ Logical architecture defined
 ✓ Component responsibilities defined
-✓ Requirements traceable
-✓ Open architectural questions identified
+✓ Data architecture defined
+✓ Integration architecture defined
+✓ API architecture defined
+✓ AI requirements mapped
+✓ RAG decision made where applicable
+✓ Agent decision made where applicable
+✓ State requirements addressed
+✓ Security architecture defined
+✓ Privacy requirements addressed
+✓ Failure/recovery defined
+✓ Performance addressed
+✓ Scalability addressed
+✓ Cost considerations addressed
+✓ Observability addressed
+✓ Infrastructure addressed
+✓ Environment strategy defined
+✓ Technology choices documented
+✓ ADRs created
+✓ Threat model completed
+✓ Architecture risks identified
+✓ Traceability completed
+✓ Open questions documented
 ✓ Architecture reviewed
 ✓ Architecture approved
-39. What We Have Now
-At the end of Part 4
+```
 
+ Then:
+
+```
+                    GATE 3
+                      │
+             ┌────────┴────────┐
+             │                 │
+          APPROVED           REWORK
+             │                 │
+             ▼                 └────→ ARCHITECT
+       AI ARCHITECT
+```
+
+---
+
+ # 57\. What We Have Achieved After Part 4
+
+ We now have three distinct layers:
+
+```
+┌─────────────────────────────────────────────┐
+│ PART 2 — BUSINESS                            │
+│                                              │
+│ What business wants                         │
+│ Why it is needed                            │
+│ Who needs it                                │
+│ What success means                          │
+└──────────────────────┬──────────────────────┘
+                       ↓
+┌─────────────────────────────────────────────┐
+│ PART 3 — SYSTEM REQUIREMENTS                 │
+│                                              │
+│ What the software must do                   │
+│ Inputs                                      │
+│ Outputs                                     │
+│ Integrations                                │
+│ Security                                    │
+│ NFRs                                        │
+└──────────────────────┬──────────────────────┘
+                       ↓
+┌─────────────────────────────────────────────┐
+│ PART 4 — SOLUTION ARCHITECTURE               │
+│                                              │
+│ How the system will be structured           │
+│ Components                                  │
+│ Data                                        │
+│ APIs                                        │
+│ Integrations                                │
+│ Security                                    │
+│ Infrastructure                              │
+│ AI architecture decision                    │
+└──────────────────────┬──────────────────────┘
+                       ↓
+                 PART 5 — AI
+```
+
+---
+
+ # 58\. Critical Boundary — Part 4 → Part 5
+
+ This is where I want to make an important distinction.
+
+ After Part 4, we **may know** that the system needs:
+
+```
+LLM
+RAG
+Tool Calling
+Agent
+Workflow
+Memory
+State
+```
+
+ But we haven't yet fully specified **how the AI should behave**.
+
+ For example, architecture may conclude:
+
+```
+Requirement:
+Answer policy questions.
+
+Architecture decision:
+Use Retrieval-Augmented Generation.
+
+Technology:
+LangChain retrieval abstraction.
+
+Model:
+Approved enterprise chat model.
+```
+
+ But the AI Architect still needs to define:
+
+```
+What exactly should the AI do?
+What information should it receive?
+What should the system prompt accomplish?
+What should the user prompt contain?
+What variables exist?
+What context is allowed?
+What should happen when context is insufficient?
+What output schema is required?
+What should the model never do?
+What model parameters are appropriate?
+What should be evaluated?
+```
+
+ That is **Part 5**.
+
+---
+
+ # 59\. The Transition to AI Specification
+
+ The resulting pipeline now becomes:
+
+```
+                    BRD
+                     │
+                     ▼
+                    SRS
+                     │
+                     ▼
+             SOLUTION ARCHITECTURE
+                     │
+                     ▼
+              ┌───────────────┐
+              │ AI ARCHITECT  │
+              └───────┬───────┘
+                      │
+                      ▼
+              AI SPECIFICATION
+                      │
+          ┌───────────┼────────────┐
+          ▼           ▼            ▼
+       MODEL        CONTEXT       TOOLS
+       SPEC          SPEC          SPEC
+          │           │            │
+          └───────────┼────────────┘
+                      ▼
+              PROMPT SPECIFICATION
+                      │
+                      ▼
+            AGENT / WORKFLOW SPEC
+                      │
+                      ▼
+              DEVELOPER HANDOFF
+```
+
+ # Part 5 — AI Application Specification
+
+ In the next part, I would switch my primary role to:
+
+ > **AI Solution Architect / AI Systems Architect**
+
+ and perform a detailed **AI decomposition**.
+
+ That stage should answer the most important questions around your original 8-step implementation idea:
+
+```
+1. What are the AI capabilities?
+2. What are the AI inputs?
+3. Which variables are system variables?
+4. Which are user variables?
+5. Which are contextual variables?
+6. Which are conversation/state variables?
+7. What context enters the model?
+8. What context must never enter?
+9. What model capability is required?
+10. What output must the model produce?
+11. What structured output contract is required?
+12. What guardrails are required?
+13. What happens when the model fails?
+14. What happens when knowledge is unavailable?
+15. What happens when a tool fails?
+16. Does memory exist?
+17. Does state exist?
+18. Is RAG required?
+19. Are tools required?
+20. Is an agent actually required?
+21. What AI behavior is deterministic vs probabilistic?
+22. What must be evaluated?
+```
+
+ And only **after that** will we turn the AI specification into the detailed **Prompt Specification**, where your original concepts such as:
+
+```
+User Input
+   ↓
+Prompt Variables
+   ↓
+ChatPromptTemplate
+   ↓
+LLM
+   ↓
+AIMessage
+   ↓
+Output Parser
+   ↓
+Application Response
+```
+
+ will be formally specified rather than being the starting point of the design.
+
+ That gives us the correct architecture-first progression:
+
+ > **BRD → SRS → Solution Architecture → AI Specification → Prompt Specification → Agent/Workflow Specification → Developer Handoff.**
