@@ -1,4 +1,4 @@
-LLM-Based Application Development
+# LLM-Based Application Development
 
 A structured, practical roadmap for learning and building LLM-based applications, from foundational concepts to production-ready AI systems.
 
