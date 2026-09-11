@@ -36,6 +36,23 @@ LLMs generally don't have a single internal switch that says **“legitimate” 
 
  **request → inferred goal → risk/capability assessment → policy constraints → response**
 
+
+
+ ---
+
+
+ If you mean a **file name for this discussion/content**, a good choice would be:
+
+ `LLM_Goal_Intent_and_Safety_Mechanisms.md`
+
+ Other options:
+
+ - `LLM_Safety_and_Intent_Detection.md`
+- `Understanding_LLM_Restrictions.md`
+- `LLM_Guardrails_and_Intent.md`
+- `LLM_Hacks_and_Safety_Boundaries.md`
+- `How_LLMs_Determine_Legitimate_Requests.md`
+
  And importantly, **“legitimate” doesn't necessarily mean “good person.”** A request can be legitimate because the _specific assistance being requested_ is low-risk, even if the broader subject is sensitive.
 
  If you're interested in the technical side, I can also explain **how this is implemented in modern LLM systems—training, classifiers, policy models, instruction hierarchy, and inference-time safeguards.**
